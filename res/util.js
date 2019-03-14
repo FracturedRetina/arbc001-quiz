@@ -1,5 +1,6 @@
 const LONG = "ايو";
 const SHORT = "َُِ";
+const OTHER = "ّْ";
 
 function loadWords(data) {
 	var lines = data.split("\n");
@@ -55,4 +56,16 @@ function shuffleVowels(word) {
 	} else {
 		return ret;
 	}
+}
+
+function stripTashkeel(word) {
+	var ret = "";
+
+	for (var i = 0; i < word.length; i++) {
+		if (!SHORT.includes(word[i]) && !OTHER.includes(word[i])) {
+			ret += word[i];
+		}
+	}
+
+	return ret;
 }
