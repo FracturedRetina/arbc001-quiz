@@ -10,15 +10,7 @@ $(document).ready(function() {
 	}).then(function() {
 		$.get("../res/unit_06_vocab.csv", function(data) {
 			loadWords(data);
-		}).then(function() {
-			if (Math.random() > 0.5) {
-				generateSpellingQuestion();
-				questionType = "spelling";
-			} else {
-				generateVocabQuestion();
-				questionType = "vocab";
-			}
-		});
+		}).then(genNextQuestion);
 	});
 
 	$('#submit').click(onSubmit);
@@ -58,18 +50,22 @@ function onSubmit() {
 	} else {
 		$('#question').empty();
 		$('#feedback').slideUp();
-		if (Math.random() > 0.5) {
-			generateSpellingQuestion();
-			questionType = "spelling";
-		} else {
-			generateVocabQuestion();
-			questionType = "vocab";
-		}
+		genNextQuestion();
 		$('#submit').text("Submit");
 	}
 }
 
-function generateVocabQuestion() {
+function genNextQuestion() {
+	if (Math.random() > 0.5) {
+		genSpellingQuestion();
+		questionType = "spelling";
+	} else {
+		genVocabQuestion();
+		questionType = "vocab";
+	}
+}
+
+function genVocabQuestion() {
 	var wordEntry = words[Math.floor(Math.random() * words.length)];
 	var word = Object.keys(wordEntry)[0];
 	var translation = Object.values(wordEntry)[0];
@@ -90,7 +86,7 @@ function generateVocabQuestion() {
 	});
 }
 
-function generateSpellingQuestion() {
+function genSpellingQuestion() {
 	var wordEntry = words[Math.floor(Math.random() * words.length)];
 	var word = Object.keys(wordEntry)[0];
 	var translation = Object.values(wordEntry)[0];
@@ -118,6 +114,6 @@ function generateSpellingQuestion() {
 		$('#instructions').text("Select the correct spelling of the Arabic word for " + translation + ".");
 	}
 	if ($('#question').children().length <= 1) {
-		generateSpellingQuestion();
+		genSpellingQuestion();
 	}
 }
