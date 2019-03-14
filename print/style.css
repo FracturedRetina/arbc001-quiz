@@ -1,0 +1,27 @@
+.questions {
+	list-style: arabic-indic;
+}
+
+.questions ol {
+	list-style: lower-latin;
+	margin: 10px;
+}
+
+#definitions li {
+	margin: 10px;
+}
+
+.arabic {
+	font-size: 18pt;
+}
+
+#answers {
+	transform: rotate(180deg);
+	margin-top: 75px;
+	list-style: arabic-indic;
+}
+
+#answers li {
+	float: left;
+	margin-right: 35px;
+}
