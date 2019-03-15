@@ -17,8 +17,8 @@
 
 #answers {
 	transform: rotate(180deg);
-	margin-top: 75px;
 	list-style: arabic-indic;
+	overflow: hidden;
 }
 
 #answers li {

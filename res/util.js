@@ -3,13 +3,15 @@ const SHORT = "َُِ";
 const OTHER = "ّْ";
 
 function loadWords(data) {
+	var loaded = [];
 	var lines = data.split("\n");
 	for (var i = 0; i < lines.length; i++) {
 		var splitLn = lines[i].split(',');
 		var entry = {};
 		entry[splitLn[0]] = splitLn[1];
-		words.push(entry);
+		loaded.push(entry);
 	}
+	return loaded;
 }
 
 function countVowels(word) {

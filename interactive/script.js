@@ -1,17 +1,48 @@
-var words = [];
+var spellingWords = [];
+var vocabWords = [];
 var currAnswer;
 var numCorrect = 0;
 var numAnswered = 0;
 var questionType;
 
 $(document).ready(function() {
-	$.get("../res/unit_05_vocab.csv", function(data) {
-		loadWords(data);
-	}).then(function() {
-		$.get("../res/unit_06_vocab.csv", function(data) {
-			loadWords(data);
-		}).then(genNextQuestion);
+	$.ajax({
+		url: "../res/unit_05_vocab.csv",
+		success: function(data) {
+			var words = loadWords(data);
+			spellingWords = spellingWords.concat(words);
+			vocabWords = vocabWords.concat(words);
+		},
+		async: false
 	});
+	$.ajax({
+		url: "../res/unit_06_vocab.csv",
+		success: function(data) {
+			var words = loadWords(data);
+			spellingWords = spellingWords.concat(words);
+			vocabWords = vocabWords.concat(words);
+		},
+		async: false
+	});
+	$.ajax({
+		url: "../res/unit_03_vocab.csv",
+		success: function(data) {
+			var words = loadWords(data);
+			spellingWords = spellingWords.concat(words);
+			vocabWords = vocabWords.concat(words);
+		},
+		async: false
+	});
+	$.ajax({
+		url: "../res/countries_vocab.csv",
+		success: function(data) {
+			var words = loadWords(data);
+			spellingWords = spellingWords.concat(words);
+		},
+		async: false
+	});
+
+	genNextQuestion();
 
 	$('#submit').click(onSubmit);
 });
@@ -66,7 +97,7 @@ function genNextQuestion() {
 }
 
 function genVocabQuestion() {
-	var wordEntry = words[Math.floor(Math.random() * words.length)];
+	var wordEntry = vocabWords[Math.floor(Math.random() * vocabWords.length)];
 	var word = Object.keys(wordEntry)[0];
 	var translation = Object.values(wordEntry)[0];
 	
@@ -87,7 +118,7 @@ function genVocabQuestion() {
 }
 
 function genSpellingQuestion() {
-	var wordEntry = words[Math.floor(Math.random() * words.length)];
+	var wordEntry = spellingWords[Math.floor(Math.random() * spellingWords.length)];
 	var word = Object.keys(wordEntry)[0];
 	var translation = Object.values(wordEntry)[0];
 	var numVowels = countVowels(word);
