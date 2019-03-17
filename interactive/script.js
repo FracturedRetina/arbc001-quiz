@@ -1,5 +1,5 @@
-var spellingWords = [];
-var vocabWords = [];
+var spellingWords = {};
+var vocabWords = {};
 var currAnswer;
 var numCorrect = 0;
 var numAnswered = 0;
@@ -10,8 +10,8 @@ $(document).ready(function() {
 		url: "../res/unit_05_vocab.csv",
 		success: function(data) {
 			var words = loadWords(data);
-			spellingWords = spellingWords.concat(words);
-			vocabWords = vocabWords.concat(words);
+			spellingWords = {...spellingWords, ...words};
+			vocabWords = {...vocabWords, ...words};
 		},
 		async: false
 	});
@@ -19,8 +19,8 @@ $(document).ready(function() {
 		url: "../res/unit_06_vocab.csv",
 		success: function(data) {
 			var words = loadWords(data);
-			spellingWords = spellingWords.concat(words);
-			vocabWords = vocabWords.concat(words);
+			spellingWords = {...spellingWords, ...words};
+			vocabWords = {...vocabWords, ...words};
 		},
 		async: false
 	});
@@ -28,8 +28,8 @@ $(document).ready(function() {
 		url: "../res/unit_03_vocab.csv",
 		success: function(data) {
 			var words = loadWords(data);
-			spellingWords = spellingWords.concat(words);
-			vocabWords = vocabWords.concat(words);
+			spellingWords = {...spellingWords, ...words};
+			vocabWords = {...vocabWords, ...words};
 		},
 		async: false
 	});
@@ -37,7 +37,7 @@ $(document).ready(function() {
 		url: "../res/countries_vocab.csv",
 		success: function(data) {
 			var words = loadWords(data);
-			spellingWords = spellingWords.concat(words);
+			spellingWords = {...spellingWords, ...words};
 		},
 		async: false
 	});
@@ -97,15 +97,14 @@ function genNextQuestion() {
 }
 
 function genVocabQuestion() {
-	var wordEntry = vocabWords[Math.floor(Math.random() * vocabWords.length)];
-	var word = Object.keys(wordEntry)[0];
-	var translation = Object.values(wordEntry)[0];
+	var word = Object.keys(vocabWords)[Math.floor(Math.random() * Object.keys(vocabWords).length)];
+	var wordData = vocabWords[word];
 	
 	if (Math.random() > 0.5) {
 		$('#instructions').html("Enter the English translation of the Arabic word <span class=\"arabic\">" + word + "</span>.");
-		currAnswer = translation;
+		currAnswer = wordData.en;
 	} else {
-		$('#instructions').text("Enter the Arabic translation of the English word " + translation + ". Do not add any tashkeel.");
+		$('#instructions').text("Enter the Arabic translation of the English word " + wordData.en + ". Do not add any tashkeel.");
 		currAnswer = word;
 	}
 
@@ -118,9 +117,8 @@ function genVocabQuestion() {
 }
 
 function genSpellingQuestion() {
-	var wordEntry = spellingWords[Math.floor(Math.random() * spellingWords.length)];
-	var word = Object.keys(wordEntry)[0];
-	var translation = Object.values(wordEntry)[0];
+	var word = Object.keys(spellingWords)[Math.floor(Math.random() * Object.keys(spellingWords).length)];
+	var wordData = spellingWords[word];
 	var numVowels = countVowels(word);
 	var correct = Math.floor(Math.random() * 3);
 	var answers = [];
@@ -142,7 +140,7 @@ function genSpellingQuestion() {
 			}
 		}
 		$('#question').append("<div><input id=\"choice-" + i + "\" type=\"radio\" name=\"" + numAnswered + "\" value=\"" + i + "\" /><label for=\"choice-" + i + "\" class=\"arabic\">" + answer + "<span></div>");
-		$('#instructions').text("Select the correct spelling of the Arabic word for " + translation + ".");
+		$('#instructions').text("Select the correct spelling of the Arabic word for " + wordData.en + ".");
 	}
 	if ($('#question').children().length <= 1) {
 		genSpellingQuestion();

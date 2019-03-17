@@ -1,5 +1,5 @@
-var spellingWords = [];
-var vocabWords = [];
+var spellingWords = {};
+var vocabWords = {};
 var quizAnswers = [];
 
 const SPELLING = 7;
@@ -10,8 +10,8 @@ $(document).ready(function() {
 		url: "../res/unit_05_vocab.csv",
 		success: function(data) {
 			var words = loadWords(data);
-			spellingWords = spellingWords.concat(words);
-			vocabWords = vocabWords.concat(words);
+			spellingWords = {...spellingWords, ...words};
+			vocabWords = {...vocabWords, ...words};
 		},
 		async: false
 	});
@@ -19,8 +19,8 @@ $(document).ready(function() {
 		url: "../res/unit_06_vocab.csv",
 		success: function(data) {
 			var words = loadWords(data);
-			spellingWords = spellingWords.concat(words);
-			vocabWords = vocabWords.concat(words);
+			spellingWords = {...spellingWords, ...words};
+			vocabWords = {...vocabWords, ...words};
 		},
 		async: false
 	});
@@ -28,8 +28,8 @@ $(document).ready(function() {
 		url: "../res/unit_03_vocab.csv",
 		success: function(data) {
 			var words = loadWords(data);
-			spellingWords = spellingWords.concat(words);
-			vocabWords = vocabWords.concat(words);
+			spellingWords = {...spellingWords, ...words};
+			vocabWords = {...vocabWords, ...words};
 		},
 		async: false
 	});
@@ -37,7 +37,7 @@ $(document).ready(function() {
 		url: "../res/countries_vocab.csv",
 		success: function(data) {
 			var words = loadWords(data);
-			spellingWords = spellingWords.concat(words);
+			spellingWords = {...spellingWords, ...words};
 		},
 		async: false
 	});
@@ -48,9 +48,9 @@ $(document).ready(function() {
 	//Spelling
 	for (var i = 0; i < SPELLING; i++) {
 		var question = $("<li><ol></ol></li>");
-		var word = Object.keys(spellingWords[Math.floor(Math.random() * spellingWords.length)])[0];
+		var word = Object.keys(spellingWords)[Math.floor(Math.random() * Object.keys(spellingWords).length)];
 		while (spellingUsed.includes(word)) {
-			word = Object.keys(spellingWords[Math.floor(Math.random() * spellingWords.length)])[0];
+			word = Object.keys(spellingWords)[Math.floor(Math.random() * Object.keys(spellingWords).length)];
 		}
 		spellingUsed.push(word);
 		var numVowels = countVowels(word);
@@ -83,22 +83,22 @@ $(document).ready(function() {
 	//Definitions
 	$('#definitions .questions').attr("start", SPELLING + 1);
 	for (var i = 0; i < DEFINITIONS; i++) {
-		var word = vocabWords[Math.floor(Math.random() * vocabWords.length)];
+		var word = Object.keys(vocabWords)[Math.floor(Math.random() * Object.keys(vocabWords).length)];
 		while (vocabUsed.includes(word) || spellingUsed.includes(word)) {
-			word = vocabWords[Math.floor(Math.random() * vocabWords.length)];
+			word = Object.keys(vocabWords)[Math.floor(Math.random() * Object.keys(vocabWords).length)];
 		}
-		vocabUsed.push(Object.keys(word)[0]);
-		$('#definitions .questions').append("<li>" + Object.keys(word)[0] + " ____________</li>");
-		quizAnswers.push(Object.values(word)[0]);
+		vocabUsed.push(word);
+		$('#definitions .questions').append("<li>" + vocabWords[word].en + " ____________</li>");
+		quizAnswers.push(vocabWords[word].en);
 	}
 	for (var i = 0; i < DEFINITIONS; i++) {
-		var word = vocabWords[Math.floor(Math.random() * vocabWords.length)];
-		while (vocabUsed.includes(word)) {
-			word = vocabWords[Math.floor(Math.random() * vocabWords.length)];
+		var word = Object.keys(vocabWords)[Math.floor(Math.random() * Object.keys(vocabWords).length)];
+		while (vocabUsed.includes(word) || spellingUsed.includes(word)) {
+			word = Object.keys(vocabWords)[Math.floor(Math.random() * Object.keys(vocabWords).length)];
 		}
-		vocabUsed.push(Object.values(word)[0]);
-		$('#definitions .questions').append("<li>" + Object.values(word)[0] + " ____________</li>");
-		quizAnswers.push(Object.keys(word)[0]);
+		vocabUsed.push(vocabWords[word].en);
+		$('#definitions .questions').append("<li>" + word + " ____________</li>");
+		quizAnswers.push(word);
 	}
 
 	//Answers

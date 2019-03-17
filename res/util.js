@@ -19,9 +19,16 @@ function loadWords(data) {
 	var lines = data.split("\n");
 	for (var i = 0; i < lines.length; i++) {
 		var splitLn = lines[i].split(',');
-		var entry = {};
-		entry[splitLn[0]] = splitLn[1];
-		loaded.push(entry);
+		var entry = {
+			en: splitLn[1],
+			partOfSpeech: splitLn[2]
+		};
+
+		if (entry.partOfSpeech == "adj") {
+			entry.gender = splitLn[3];
+		}
+
+		loaded[splitLn[0]] = entry;
 	}
 	return loaded;
 }
